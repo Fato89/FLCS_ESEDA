@@ -1,0 +1,339 @@
+/* @theme flacso */
+
+/* ── Fuentes locales ── */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('./fuentes/IBMPlexSans-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 100 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('./fuentes/IBMPlexSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 100 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('./fuentes/IBMPlexMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('./fuentes/IBMPlexMono-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* ── Variables ── */
+:root {
+  --flacso:   #005B85;
+  --flacso-lt:#E8F2F8;
+  --accent:   #E8520A;
+  --dark:     #1A1A2E;
+  --mid:      #4A5568;
+  --light:    #F7F9FC;
+  --code-bg:  #0F1117;
+  --green:    #2D9E6B;
+}
+
+/* ── Base ── */
+section {
+  display: flex;
+  flex-direction: column;
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--light);
+  color: var(--dark);
+  padding: 48px 64px 60px 64px;
+  font-size: 21px;
+  line-height: 1.55;
+  box-sizing: border-box;
+  /* banda inferior: border-bottom libera ::after para la paginación */
+  border-bottom: 10px solid var(--flacso);
+}
+
+/* Número de página — Marp lo gestiona con ::after */
+section::after {
+  content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+  font-size: 12px;
+  color: #fff;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* Logo */
+.logo {
+  position: absolute;
+  top: 24px;
+  right: 40px;
+  width: 200px;
+  height: auto;
+}
+
+/* ── Portada ── */
+section.portada {
+  background: #fff;
+  color: var(--dark);
+  justify-content: flex-end;
+  border-bottom-color: var(--flacso);
+}
+section.portada h1 {
+  font-size: 30px; font-weight: 700; line-height: 1.25;
+  margin: 0 0 10px; color: var(--dark);
+}
+section.portada p { color: var(--mid); font-size: 17px; margin: 4px 0; }
+section.portada .tag {
+  display: inline-block; background: var(--flacso); color: #fff;
+  font-size: 12px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 12px; border-radius: 2px; margin-bottom: 18px;
+}
+section.portada .pregunta {
+  font-size: 19px; font-style: italic; color: var(--mid);
+  border-left: 3px solid var(--accent); padding-left: 16px; margin: 20px 0;
+}
+
+/* ── Sección intermedia ── */
+section.seccion {
+  background: var(--flacso);
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-bottom-color: rgba(255, 255, 255, 0.25);
+}
+section.seccion h2 {
+  font-size: 34px; font-weight: 700; margin: 0; color: #fff; border: none;
+}
+section.seccion p { font-size: 18px; opacity: .75; margin-top: 12px; }
+section.seccion::after { color: rgba(255, 255, 255, 0.6); }
+
+/* ── Cierre ── */
+section.cierre {
+  background: #fff;
+  color: var(--dark);
+}
+section.cierre h2 { color: var(--flacso); border-color: var(--flacso-lt); }
+section.cierre .box {
+  background: var(--flacso-lt); border-left-color: var(--accent); color: var(--dark);
+}
+
+/* ── Slide oculta ── */
+section.oculta {
+  outline: 3px dashed var(--accent);
+  outline-offset: -6px;
+}
+
+/* ── Títulos ── */
+h2 {
+  color: var(--flacso); font-size: 25px; font-weight: 700;
+  border-bottom: 2px solid var(--flacso-lt); padding-bottom: 8px; margin-bottom: 20px;
+}
+h3 { color: var(--dark); font-size: 19px; font-weight: 600; margin: 18px 0 6px; }
+
+/* ── Listas ── */
+ul { padding-left: 1.4em; }
+ul li { margin-bottom: 9px; }
+ul li::marker { color: var(--flacso); }
+
+/* ── Layout ── */
+.cols  { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.cols3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+/* ── Tarjetas ── */
+.card {
+  background: #fff; border: 1px solid #DDE3EA;
+  border-left: 4px solid var(--flacso); border-radius: 6px;
+  padding: 16px 18px; font-size: 18px;
+}
+.card.accent { border-left-color: var(--accent); }
+.card.green  { border-left-color: var(--green); }
+.card .num   { font-size: 30px; font-weight: 700; color: var(--flacso); line-height: 1; }
+.card .num.or { color: var(--accent); }
+.card .lbl   {
+  font-size: 12px; color: var(--mid); text-transform: uppercase;
+  letter-spacing: .06em; margin-top: 3px;
+}
+
+/* ── Chips ── */
+.chip {
+  display: inline-block; background: var(--flacso-lt); color: var(--flacso);
+  border: 1px solid var(--flacso); border-radius: 20px;
+  padding: 3px 12px; font-size: 13px; font-weight: 600; margin: 3px 2px;
+}
+.chip.r      { background: #F0FFF4; color: #276749; border-color: #276749; }
+.chip.sql    { background: #FFF5E6; color: #975A16; border-color: #975A16; }
+.chip-accent { background: #FEF0E8; color: var(--accent); border-color: var(--accent); }
+
+/* ── Boxes ── */
+.box {
+  background: var(--flacso-lt); border-left: 4px solid var(--flacso);
+  border-radius: 0 6px 6px 0; padding: 13px 17px; margin: 14px 0; font-size: 18px;
+}
+.box.warn  { background: #FEF0E8; border-left-color: var(--accent); }
+.box.verde { background: #F0FFF4; border-left-color: var(--green); }
+
+/* ── Piedra Rosetta ── */
+.rosetta {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;
+  border-radius: 6px 6px 0 0; overflow: hidden; margin-bottom: -2px;
+}
+.rosetta > div {
+  padding: 7px 16px; font-size: 14px; font-weight: 700;
+  letter-spacing: .05em; text-align: center; color: #fff;
+}
+.r-py  { background: var(--flacso); }
+.r-r   { background: #276749; }
+.r-sql { background: #975A16; }
+
+.rosetta2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border-radius: 6px 6px 0 0; overflow: hidden; margin-bottom: -2px;
+}
+.rosetta2 > div {
+  padding: 7px 16px; font-size: 14px; font-weight: 700;
+  letter-spacing: .05em; text-align: center; color: #fff;
+}
+
+/* ── Diagrama de memoria ── */
+.mem-diagram {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 0; border: 2px solid #DDE3EA; border-radius: 8px; overflow: hidden;
+  margin: 20px 0; font-size: 16px;
+}
+.mem-block { padding: 20px 16px; text-align: center; }
+.mem-disk  { background: #E2E8F0; }
+.mem-ram   {
+  background: var(--flacso-lt);
+  border-left: 2px solid var(--flacso);
+  border-right: 2px solid var(--flacso);
+}
+.mem-cpu   { background: #FEF0E8; }
+.mem-icon  { font-size: 28px; display: block; margin-bottom: 8px; }
+.mem-title { font-weight: 700; font-size: 15px; }
+.mem-sub   { font-size: 13px; color: var(--mid); margin-top: 4px; }
+
+/* ── Tabla ── */
+table { width: 100%; border-collapse: collapse; font-size: 17px; }
+th {
+  background: var(--flacso); color: #fff;
+  padding: 8px 14px; text-align: left; font-weight: 600;
+}
+td { padding: 8px 14px; border-bottom: 1px solid #E2E8F0; }
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: var(--flacso-lt); }
+/* código dentro de tabla: hereda el estilo inline pero un poco más compacto */
+td code { font-size: 0.85em; }
+.tarea   { color: var(--accent); font-weight: 600; }
+.notarea { color: var(--mid); font-style: italic; }
+
+/* ── Diagrama ER ── */
+.er {
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap; gap: 12px; margin: 18px 0;
+}
+.er-table {
+  background: #fff; border: 2px solid var(--flacso);
+  border-radius: 6px; min-width: 130px; overflow: hidden; font-size: 14px;
+}
+.er-table .er-head {
+  background: var(--flacso); color: #fff;
+  padding: 6px 12px; font-weight: 700; font-size: 13px; text-align: center;
+}
+.er-table .er-row { padding: 4px 12px; border-bottom: 1px solid #E8F2F8; }
+.er-table .er-row:last-child { border-bottom: none; }
+.er-table .pk { color: var(--accent); font-weight: 700; }
+.er-table .fk { color: var(--green); }
+.er-arrow { font-size: 20px; color: var(--mid); }
+
+/* ── Enlaces ── */
+a {
+  color: var(--flacso);
+  /* text-decoration: underline; */
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* ── Código en bloque ── */
+pre {
+  background: var(--code-bg) !important;
+  border-radius: 6px;
+  padding: 14px 18px !important;
+  font-size: 14px !important;
+  overflow-x: auto;
+  border-left: 4px solid var(--flacso);
+  margin: 10px 0;
+}
+
+/* ── Código inline: SOLO fuera de bloques pre ── */
+code:not(pre code) {
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--flacso-lt);
+  color: var(--flacso);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.88em;
+}
+
+/* ── Código en bloque: base visible, hljs colorea encima ── */
+pre code {
+  font-family: 'IBM Plex Mono', monospace !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-size: 0.88em !important;
+  color: #ABB2BF !important;
+}
+
+/* ── Spans manuales — usados en Piedra Rosetta ── */
+.kw  { color: #C678DD; font-weight: 600; }
+.fn  { color: #61AEEE; }
+.st  { color: #98C379; }
+.cm  { color: #7C8A9E; font-style: italic; }
+.nb  { color: #E6C07B; }
+.op  { color: #E06C75; }
+
+/* ── Highlight.js — Atom One Dark ── */
+.hljs                          { color: #ABB2BF !important; }
+.hljs-comment,
+.hljs-quote                    { color: #7C8A9E !important; font-style: italic; }
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula                  { color: #C678DD !important; font-weight: 600; }
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst                    { color: #E06C75 !important; }
+.hljs-literal                  { color: #56B6C2 !important; }
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta-string              { color: #98C379 !important; }
+.hljs-built_in,
+.hljs-class .hljs-title        { color: #E6C07B !important; }
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number                   { color: #D19A66 !important; }
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title                    { color: #61AEEE !important; }
+.hljs-emphasis                 { font-style: italic; }
+.hljs-strong                   { font-weight: bold; }
+.hljs-link                     { text-decoration: underline; }

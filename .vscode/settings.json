@@ -1,0 +1,5 @@
+{
+    "markdown.marp.themes": [
+    "./Clases/estilos/flacso.css"
+  ]
+}

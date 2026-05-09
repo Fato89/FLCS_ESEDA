@@ -1,0 +1,15 @@
+# FLACSO — Estructura Social y Espacial de los Datos y su Arquitectura
+# Sesión 1: Ingesta y Arquitectura de Tablas
+
+# Manipulación de datos
+polars>=0.20.0
+
+# Lectura de formatos estadísticos
+pyreadr>=0.5.0       # lectura de .rds
+pyreadstat>=1.2.0    # lectura de .dta (Stata) y .sav (SPSS)
+
+# Interoperabilidad con pandas (necesario para pl.from_pandas)
+pandas>=2.0.0
+
+# Entorno de trabajo
+jupyter>=1.0.0
