@@ -33,3 +33,6 @@ desktop.ini
 .Rhistory
 .RData
 .Rproj.user/
+
+# Archivos temporales de Office
+~$*
