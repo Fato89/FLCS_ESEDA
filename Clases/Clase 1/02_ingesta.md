@@ -17,7 +17,7 @@ FLACSO Ecuador <br></p>
 
 ---
 
-## Vamosa trabajr con la Encuesta de Desnutrición Infantil (ENDI)
+## Vamos a trabajar con la Encuesta de Desnutrición Infantil (ENDI)
 
 <div class="cols3" style="margin-bottom:24px;">
   <div class="card">
@@ -437,8 +437,6 @@ En R la carga desde <code>.rds</code> es nativa y preserva los tipos de variable
 
 ## Del concepto al byte
 
-
-
 La distinción cuantitativo/cualitativo es analítica. Los tipos de datos en memoria son más específicos:
 
 | Tipo | ¿Qué guarda? | Bytes típicos | Ejemplo en ENDI |
@@ -456,9 +454,54 @@ La distinción cuantitativo/cualitativo es analítica. Los tipos de datos en mem
 
 ---
 
+## Bits, memoria y rangos
+
+<div class="box">
+Con <strong>N bits</strong> se pueden representar <strong>2^N combinaciones</strong>. Un bit reservado para el signo parte ese espacio en dos: mitad para negativos, mitad para positivos.
+</div>
+
+<div class="cols">
+<div>
+
+### Enteros
+
+| Tipo | Bits | Rango |
+|---|---|---|
+| `Int8` | 8 | -128 a 127 |
+| `UInt8` | 8 | 0 a 255 |
+| `Int16` | 16 | -32.768 a 32.767 |
+| `Int32` | 32 | -2.147M a 2.147M |
+| `Int64` | 64 | -9.2×10^18 a 9.2×10^18 |
+| `Boolean` | 1 | True / False |
+
+</div>
+<div>
+
+### Decimales (punto flotante — IEEE 754)
+
+| Tipo | Bits | Signo | Exponente | Mantisa | Precisión |
+|---|---|---|---|---|---|
+| `Float32` | 32 | 1 | 8 | 23 | ~7 dígitos |
+| `Float64` | 64 | 1 | 11 | 52 | ~15 dígitos |
+
+$$
+\underbrace{1}_{s} \quad \underbrace{8 \text{ bits}}_{e} \quad \underbrace{23 \text{ bits}}_{m}
+$$
+
+$$
+a = (-1)^s \cdot 1.m_2 \cdot 2^{e_2 - 127}
+$$
+
+<div class="box warn">
+<code>fexp</code> en la ENDI es <code>Float64</code> — necesita los 15 dígitos de precisión para no distorsionar las estimaciones ponderadas.
+</div>
+
+</div>
+</div>
+
+---
+
 ## Los tipos en la ENDI — Polars
-
-
 
 ```python
 import polars as pl
@@ -494,57 +537,61 @@ Polars infiere los tipos automáticamente al leer el CSV. Pero siempre vale la p
 ## Piedra Rosetta #2 — Exploración inicial
 
 
-
 <div class="rosetta">
-  <div class="r-py">🐍 Python · Polars</div>
-  <div class="r-r">📊 R · base / dplyr</div>
-  <div class="r-sql">🗄 SQL · PostgreSQL</div>
+  <div class="r-py">Python · Polars</div>
+  <div class="r-r">R · base / dplyr</div>
+  <div class="r-sql">SQL · PostgreSQL</div>
 </div>
 
 <div class="cols3" style="gap:8px;">
 
-<pre><code><span class="cm"># Forma y primeras filas</span>
-df.<span class="fn">shape</span>        <span class="cm"># (filas, cols)</span>
-df.<span class="fn">head</span>(5)
-df.<span class="fn">tail</span>(3)
+```python
+# Forma y primeras filas
+df.shape        # (filas, cols)
+df.head(5)
+df.tail(3)
 
-<span class="cm"># Esquema</span>
-df.<span class="fn">schema</span>
+# Esquema
+df.schema
 
-<span class="cm"># Resumen estadístico</span>
-df.<span class="fn">describe</span>()
-</code></pre>
+# Resumen estadístico
+df.describe()
+```
 
-<pre><code><span class="cm"># Forma</span>
-<span class="fn">dim</span>(df)         <span class="cm"># filas, cols</span>
-<span class="fn">head</span>(df, 5)
+```r
+# Forma
+dim(df)         # filas, cols
+head(df, 5)
 
-<span class="cm"># Tipos</span>
-<span class="fn">str</span>(df)
-<span class="fn">glimpse</span>(df)  <span class="cm"># dplyr</span>
+# Tipos
+str(df)
+glimpse(df)     # dplyr
 
-<span class="cm"># Resumen</span>
-<span class="fn">summary</span>(df)
-</code></pre>
+# Resumen
+summary(df)
+```
 
-<pre><code><span class="cm">-- Contar filas</span>
-<span class="kw">SELECT COUNT</span>(*) <span class="kw">FROM</span> personas;
+```sql
+-- Contar filas
+SELECT COUNT(*) FROM personas;
 
-<span class="cm">-- Ver primeras filas</span>
-<span class="kw">SELECT</span> * <span class="kw">FROM</span> personas
-<span class="kw">LIMIT</span> 5;
+-- Ver primeras filas
+SELECT * FROM personas
+LIMIT 5;
 
-<span class="cm">-- Columnas y tipos</span>
-\d personas     <span class="cm">-- en psql</span>
-</code></pre>
+-- Columnas y tipos
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'personas';
+
+\d personas -- en psql
+```
 
 </div>
 
 ---
 
 ## Resumen numérico y categorías
-
-
 
 <div class="cols">
 <div>
@@ -560,8 +607,7 @@ df.describe()
 df.select(pl.col(pl.NUMERIC_DTYPES)).describe()
 
 # Distribución de una variable
-df["p3_2"].value_counts().sort("count",
-                               descending=True)
+df["p3_2"].value_counts().sort("count",descending=True)
 ```
 
 `describe()` devuelve: `count`, `null_count`, `mean`, `std`, `min`, `25%`, `50%`, `75%`, `max`
@@ -604,8 +650,7 @@ for col in cat_cols:
 df.null_count()
 
 # Proporción de nulos
-(df.null_count() / len(df) * 100
- ).transpose(
+(df.null_count() / len(df) * 100).transpose(
    include_header=True,
    column_names=["pct_nulo"]
  ).sort("pct_nulo", descending=True)
@@ -624,7 +669,7 @@ df.null_count()
 | `999` | Limitación logística |
 
 <div class="box warn" style="font-size:16px;">
-En la ENDI, los missings <strong>no son aleatorios</strong>. Un `NA` en la sección de lactancia significa que ese niño tenía más de 3 años. Interpretarlos mal cambia los resultados.
+En la ENDI, los missings <strong>no son aleatorios</strong>. Un 'NA' en la sección de lactancia significa que ese niño tenía más de 3 años. Interpretarlos mal cambia los resultados.
 </div>
 
 </div>
@@ -661,8 +706,8 @@ En la ENDI, los missings <strong>no son aleatorios</strong>. Un `NA` en la secci
 </div>
 </div>
 
-<div class="box" style="margin-top:20px; font-size:18px;">
-📌 <strong>Próxima sesión (21 may):</strong> tenemos los datos cargados — ahora los transformamos. Data wrangling: filtros, recodificación y reshaping (long vs wide).
+<div class="box verde">
+<strong>Próxima sesión:</strong> tenemos los datos cargados - ahora los transformamos. Data wrangling: filtros, recodificación y reshaping (long vs wide).
 </div>
 
 ---
@@ -671,11 +716,11 @@ En la ENDI, los missings <strong>no son aleatorios</strong>. Un `NA` en la secci
 
 
 
-<div class="box verde" style="font-size:19px; margin-bottom:24px;">
-🧪 <strong>Tarea de la hora práctica:</strong> exploración inicial de la tabla <code>f1_personas</code> de la ENDI
+<div class="box verde">
+<strong>Tarea de la hora práctica:</strong> exploración inicial de la tabla <code>f1_personas</code> de la ENDI
 </div>
 
-**Consigna:**
+**Instrucciones:**
 
 1. Carguen la tabla `BDD_ENDI_R2_f1_personas.csv` con Polars
 2. Impriman la forma de la tabla (filas y columnas)
@@ -686,6 +731,6 @@ En la ENDI, los missings <strong>no son aleatorios</strong>. Un `NA` en la secci
 
 **Pregunten:** ¿qué tipo de dato tiene `fexp`? ¿Tiene sentido ese tipo? ¿Y el código de provincia `prov`?
 
-<div class="box warn" style="font-size:17px;">
-Sin tarea para el jueves (sesión de martes). La próxima tarea llega el <strong>jueves 21 de mayo</strong>.
+<div class="box warn">
+Sin tarea para el jueves. Sí habrá evaluación diaria.
 </div>
