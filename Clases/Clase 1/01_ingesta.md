@@ -1,6 +1,7 @@
 ---
 marp: true
 theme: flacso
+math: mathjax
 paginate: true
 ---
 
@@ -383,6 +384,58 @@ ENCODING 'UTF8';
 </div>
 
 ---
+## `read_csv` vs `scan_csv` (lazy)
+
+<div class="cols">
+<div>
+
+### `read_csv` — ejecución inmediata
+
+```python
+df = pl.read_csv(
+  "BDD_ENDI_R2_f1_personas.csv",
+  separator=";",
+  encoding="utf-8",
+  has_header=True
+)
+```
+
+- Lee el archivo completo al llamar la función
+- Las 124 columnas y 93.242 filas entran a RAM de una vez
+- El resultado es un `DataFrame` listo para usar
+
+</div>
+<div>
+
+### `scan_csv` — ejecución perezosa
+
+```python
+df = (
+  pl.scan_csv(
+    "BDD_ENDI_R2_f1_personas.csv",
+    separator=";",
+    encoding="utf-8",
+    has_header=True
+  )
+  .filter(pl.col("area") == 1)
+  .select(["id_per", "fexp", "area"])
+  .collect()
+)
+```
+
+- `scan_csv` no lee nada todavía — construye un plan
+- `.filter()` y `.select()` agregan instrucciones al plan
+- `.collect()` ejecuta todo: lee solo las columnas y filas necesarias
+- El resultado es el mismo `DataFrame`, pero Polars nunca cargó las 124 columnas completas
+
+</div>
+</div>
+
+<div class="box" style="font-size:17px;">
+Para exploración inicial usa <code>read_csv</code>. Para producción o archivos grandes, <code>scan_csv</code> con <code>.filter()</code> y <code>.select()</code> antes de <code>.collect()</code> reduce significativamente el uso de RAM.
+</div>
+
+---
 
 ## Piedra Rosetta — Carga desde RDS
 
@@ -722,7 +775,7 @@ En la ENDI, los missings <strong>no son aleatorios</strong>. Un 'NA' en la secci
 
 **Instrucciones:**
 
-1. Carguen la tabla `BDD_ENDI_R2_f1_personas.csv` con Polars
+1. Carguen la tabla `BDD_ENDI_R2_f1_personas.rds` y transformen a Polars
 2. Impriman la forma de la tabla (filas y columnas)
 3. Muestren el schema completo (nombre + tipo de cada columna)
 4. Ejecuten `.describe()` y identifiquen 3 variables numéricas de interés
