@@ -66,7 +66,6 @@ Cuando Polars lee un CSV, infiere los tipos columna por columna. Lo hace bien pa
 | `area` | `Float64` | `Categorical` | Urbano=1, Rural=2 no son magnitudes |
 | `region` | `Float64` | `Categorical` | Costa=1, Sierra=2, Amazonia=3 |
 | `prov` | `Float64` o `Int64` | `String` | Código de provincia, no número |
-| `estrato` | `String` | `Categorical` | Ya es string pero conviene categorizar |
 | `id_upm` | `Int64` | `String` | Es un identificador, no una cantidad |
 | `f1_s1_2` | `Int64` | `Categorical` | Sexo: 1=Hombre, 2=Mujer |
 
@@ -82,7 +81,6 @@ La forma más clara para estudiantes: una sola llamada `.with_columns()` con una
 
 ```python
 import polars as pl
-
 df = df.with_columns([
     # Variables geográficas y de diseño muestral
     pl.col("area").cast(pl.Categorical),
@@ -104,35 +102,83 @@ df = df.with_columns([
 
 ---
 
-## Cast - forma alternativa con **selectores**
+## Selectores - referencia rápida
 
-Polars también tiene selectores (`cs`) para operar sobre grupos de columnas por tipo. Es más compacto cuando el grupo es homogéneo:
+Los selectores (`cs`) son expresiones que describen *grupos de columnas* por tipo, nombre o patrón. Se importan aparte:
 
 ```python
 import polars.selectors as cs
-
-# Ver cuáles son Float64 actualmente
-print(df.select(cs.by_dtype(pl.Float64)).columns)
-
-# Cambiar a String todas las que son identificadores
-id_cols = ["id_upm", "id_viv", "id_hogar", "id_per", "id_mef"]
-df = df.with_columns(
-    cs.by_name(*id_cols).cast(pl.String))
 ```
 
-<div class="box">
-<strong>Regla práctica:</strong> usar <code>cs.by_dtype()</code> cuando todas las columnas de ese tipo necesitan el mismo cast.
+<div class="cols">
+<div>
+
+**Por tipo de dato**
+```python
+cs.numeric()      # Int*, Float*, UInt*
+cs.string()       # Utf8 / String
+cs.boolean()      # Bool
+cs.temporal()     # Date, Datetime, Duration, Time
+cs.categorical()  # Categorical
+```
+
+**Por nombre o patrón**
+```python
+cs.starts_with("f1_s5_")   # acepta multiples prefijos
+cs.ends_with("_id", "_cod")
+cs.contains("monto", "valor")
+cs.by_name("edad", "sexo")  # equivalente a pl.col() pero componible
+```
+
+</div>
+<div>
+
+**Condiciones compuestas**
+```python
+# Numéricas excepto identificadores
+cs.numeric() & ~cs.ends_with("_id")
+# Variables de monto o de fecha
+cs.contains("monto") | cs.temporal()
+# Todo excepto strings
+~cs.string()
+```
+
+**Convertir a expresión**
+```python
+# Necesario cuando se mezcla con pl.col()
+cs.numeric().as_expr()
+```
+
+</div>
 </div>
 
-<div class="box warn">
-No todas las <code>Float64</code> deben convertirse a <code>Categorical</code>. <code>fexp</code>, <code>talla</code>, <code>peso</code> son genuinamente numéricas y deben quedarse como están.
-</div>
+---
+## Selectores en `.with_columns()` - caso ENDI
 
+El caso más útil en encuestas: aplicar la misma transformación a un grupo de columnas.
+
+**Caso 1 - Reemplazar códigos de no respuesta en todas las columnas numéricas de una sección**
+
+```python
+# En la ENDI, 88 = "No sabe", 99 = "No responde", 9999 = omisión
+df = df.with_columns(
+    cs.starts_with("f1_s1_").replace({88: None, 99: None, 9999: None})
+)
+```
+
+**Caso 2 - Cast de todos los identificadores en una sola línea**
+
+```python
+# En lugar de listar id_upm, id_viv, id_hogar, id_per uno por uno
+df = df.with_columns(
+    cs.by_name("id_upm", "id_viv", "id_hogar", "id_per", "id_mef").cast(pl.String)
+)
+```
 ---
 
 <!-- _class: seccion -->
 
-## Filtros y seleccion
+## Filtros y selección
 
 <p>.filter(), .select(), .drop() y selectores</p>
 
@@ -140,7 +186,7 @@ No todas las <code>Float64</code> deben convertirse a <code>Categorical</code>. 
 
 ## `.filter()` - filas que cumplen una condición
 
-La sintaxis básica es siempre `pl.col("nombre") operador valor`:
+La sintaxis básica es siempre `pl.col("nombre") <operador> <valor>`:
 
 ```python
 # Menores de 5 años (< 1826 días) - población objetivo de desnutrición crónica
@@ -172,17 +218,17 @@ Con <code>Categorical</code>, comparar contra strings requiere <code>pl.lit()</c
 ```python
 import polars.selectors as cs
 
-# Seleccion manual: las columnas clave para desnutricion
+# Selección manual: las columnas clave para desnutrición
 df_trabajo = df.select([
     "id_per", "id_hogar",
     "area", "region", "prov",
     "fexp", "estrato",
     "f1_s1_2",        # sexo
-    "edaddias",       # calculada en sesion 1
+    "edaddias",       # calculada en sesión 1
     "dcronica",       # indicador precalculado
 ])
 
-# Con selectores: quedarme con IDs + categoricas + floats
+# Con selectores: quedarme con IDs + categóricas + floats
 df_trabajo = df.select(
     cs.by_name("id_per", "id_hogar", "fexp", "estrato") |
     cs.categorical() |
@@ -302,7 +348,7 @@ Pasar de código numérico a texto legible.
 Necesario porque la ENDI entrega códigos, no etiquetas.
 
 </div>
-<div class="card accent">
+<div class="card">
 
 **Crear variables derivadas**
 
@@ -313,7 +359,7 @@ Construir una variable nueva a partir de otras.
 Necesario para desagregaciones analíticas.
 
 </div>
-<div class="card green">
+<div class="card">
 
 **Corregir o limpiar**
 
@@ -357,6 +403,78 @@ df = df.with_columns([
 
 <div class="box">
 <code>.alias("nombre")</code> crea la columna con ese nombre. Sin alias, Polars usa el nombre de la columna original y <strong>sobreescribe</strong> la columna.
+</div>
+
+---
+
+## `pl.Categorical` vs `pl.Enum` - cuándo usar cada uno
+
+Una columna de **texto** creada con `pl.when()` tiene tipo `pl.String`. Si los valores son un conjunto cerrado y finito, Polars puede trabajar con ellos de forma más eficiente usando `pl.Categorical` o `pl.Enum`.
+
+<div class="cols">
+<div>
+
+**`pl.Categorical`**
+
+Polars construye la lista de categorías automáticamente al leer los datos. No hay un orden definido.
+
+Usar cuando:
+- Las categorías no tienen jerarquía natural
+- No se conocen de antemano todos los valores posibles
+- Se trabaja con variables nominales: `area`, `region`, `prov`, `sexo`
+
+```python
+pl.col("area_etiq").cast(pl.Categorical)
+```
+
+</div>
+<div>
+
+**`pl.Enum`**
+
+Las categorías se declaran explícitamente y en orden. Polars las trata como una lista cerrada y ordenada.
+
+Usar cuando:
+- Se trabaja con variables ordinales: nivel educativo, quintil, grupo de edad
+- Se quiere garantizar que no aparezcan valores inesperados
+
+```python
+pl.col("grupo_edad").cast(pl.Enum(["0-23 meses", "24-59 meses"]))
+```
+
+</div>
+</div>
+
+<div class="box warn">
+<code>pl.Enum</code> da error si encuentra un valor que no está en la lista declarada. Actúa como validación automática de los datos.
+</div>
+
+---
+
+## `pl.Categorical` y `pl.Enum` - ejemplos con la ENDI
+
+```python
+from polars import Enum
+# Variables nominales: sin orden, categorías conocidas
+df = df.with_columns([
+    pl.col("area_etiq").cast(pl.Categorical),    # Urbana / Rural
+    pl.col("region_etiq").cast(pl.Categorical),  # Costa / Sierra / Amazonía
+    pl.col("prov").cast(pl.Categorical),          # código de provincia
+])
+# Variable ordinal: grupo de edad con orden explícito
+orden_edad = ["0-23 meses", "24-59 meses"]
+df = df.with_columns(
+    pl.col("grupo_edad").cast(pl.Enum(orden_edad))
+)
+# Verificar que el orden se respeta al ordenar
+df.filter(pl.col("grupo_edad").is_not_null()) \
+  .sort("grupo_edad") \
+  ["grupo_edad"].unique()
+# Resultado: ["0-23 meses", "24-59 meses"] - en ese orden, no alfabético
+```
+
+<div class="box">
+Sin <code>pl.Enum</code>, al ordenar una columna de strings Polars usaría orden alfabético: <code>"24-59 meses"</code> quedaría antes que <code>"0-23 meses"</code>. Con <code>pl.Enum</code> el orden es el que se declaró.
 </div>
 
 ---

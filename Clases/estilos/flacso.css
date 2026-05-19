@@ -50,21 +50,15 @@ section {
   color: var(--dark);
   padding: 48px 64px 60px 64px;
   font-size: 21px;
-  line-height: 1.55;
+  line-height: 1.5;
   box-sizing: border-box;
   /* banda inferior: border-bottom libera ::after para la paginación */
   border-bottom: 10px solid var(--flacso);
 }
 
-/* Número de página — Marp lo gestiona con ::after */
+/* Número de página */
 section::after {
-  content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
-  position: absolute;
-  bottom: 8px;
-  right: 16px;
-  font-size: 12px;
-  color: #fff;
-  font-family: 'IBM Plex Sans', sans-serif;
+  display: none;
 }
 
 /* Logo */
@@ -74,6 +68,11 @@ section::after {
   right: 40px;
   width: 200px;
   height: auto;
+}
+
+/* espacio entre parrafo y siguiente elemento */
+p {
+  margin: 15px 0 3px;
 }
 
 /* ── Portada ── */
@@ -134,7 +133,12 @@ h2 {
   color: var(--flacso); font-size: 25px; font-weight: 700;
   border-bottom: 2px solid var(--flacso-lt); padding-bottom: 8px; margin-bottom: 20px;
 }
-h3 { color: var(--dark); font-size: 19px; font-weight: 600; margin: 18px 0 6px; }
+h3 {
+  color: var(--dark);
+  font-size: 19px;
+  font-weight: 600;
+  margin: 8px 0 4px;
+}
 
 /* ── Listas ── */
 ul { padding-left: 1.4em; }
@@ -265,11 +269,11 @@ a:hover {
 pre {
   background: var(--code-bg) !important;
   border-radius: 6px;
-  padding: 14px 18px !important;
-  font-size: 14px !important;
+  padding: 8px 14px !important;
+  font-size: 15px !important;
   overflow-x: auto;
   border-left: 4px solid var(--flacso);
-  margin: 10px 0;
+  margin: 0px 0;
 }
 
 /* ── Código inline: SOLO fuera de bloques pre ── */
@@ -288,7 +292,7 @@ pre code {
   background: transparent !important;
   padding: 0 !important;
   border-radius: 0 !important;
-  font-size: 0.88em !important;
+  font-size: 0.92em !important;
   color: #ABB2BF !important;
 }
 

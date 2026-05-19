@@ -155,8 +155,8 @@ Las <strong>formas normales</strong> (1FN, 2FN, 3FN) son las reglas formales de 
 <div class="cols" style="margin-top:4px; font-size:17px;">
 <div>
 
-**Llaves primarias** <span style="color:var(--accent)">🔑</span> — identifican de forma única cada fila  
-**Llaves foráneas** <span style="color:var(--green)">🔗</span> — conectan tablas entre sí
+**Llaves primarias** <span style="color:var(--accent)">🔑</span> - identifican de forma única cada fila  
+**Llaves foráneas** <span style="color:var(--green)">🔗</span> - conectan tablas entre sí
 
 </div>
 <div>
@@ -228,7 +228,7 @@ Cuando hacemos <code>pl.read_csv("archivo.csv")</code> estamos <strong>moviendo 
 
 ### Pandas vs Polars
 
-**Pandas** carga toda la tabla en RAM de una vez, en formato de filas. Cada operación recorre fila por fila.
+**Pandas** carga toda la tabla entera en RAM, en formato de filas. Cada operación recorre fila por fila.
 
 **Polars** usa almacenamiento **columnar** (Arrow) y **evaluación perezosa** (*lazy evaluation*):
 - Construye un plan de consulta
@@ -273,10 +273,10 @@ con 8GB de RAM porque nunca necesita cargarla completa.
 <div>
 
 ### Texto plano (¿simple?)
-**`.csv`** — separado por comas *(¡ojo con el separador!)*
+**`.csv`** - separado por comas *(¡ojo con el separador!)*
 - Puede ser `;` en configuraciones en español
 - Puede ser `\t` (TSV)
-- **Encoding:** `UTF-8` o `latin-1` / `ISO-8859-1` — crítico para tildes y ñ
+- **Encoding:** `UTF-8` o `latin-1` / `ISO-8859-1` - crítico para tildes y ñ
 
 <div class="box" style="font-size:15px; margin: 8px 0;">
 <strong>¿Qué es el encoding?</strong> Es la tabla que mapea caracteres a números binarios. UTF-8 puede representar cualquier caracter del mundo. Latin-1 solo cubre el alfabeto occidental (default de Windows en español).
@@ -293,10 +293,10 @@ pl.read_csv("archivo.csv", separator=";",
 <div>
 
 ### Formatos estadísticos
-**`.rds`** — formato nativo de R, preserva tipos
-**`.dta`** — formato Stata
-**`.sav`** — formato SPSS
-**`.xlsx`** — Excel, ojo con hojas múltiples
+**`.rds`** - formato nativo de R, preserva tipos
+**`.dta`** - formato Stata
+**`.sav`** - formato SPSS
+**`.xlsx`** - Excel, ojo con hojas múltiples
 
 
 ```python
@@ -326,7 +326,7 @@ El INEC ofrece la ENDI en <code>.rds</code> y <code>.dta</code>. En clase descar
 
 ---
 
-## Piedra Rosetta — Carga desde CSV
+## Piedra Rosetta - Carga desde CSV
 
 <div class="rosetta">
   <div class="r-py">Python - Polars</div>
@@ -380,7 +380,7 @@ ENCODING 'UTF8';
 </div>
 
 <div class="box verde" style="font-size:17px;">
-<strong>Piedra Rosetta:</strong> las tres operaciones hacen exactamente lo mismo. El concepto — <em>leer un archivo e inferir su estructura</em> independientemente de la herramienta.
+<strong>Piedra Rosetta:</strong> las tres operaciones hacen exactamente lo mismo. El concepto - <em>leer un archivo e inferir su estructura</em> independientemente de la herramienta.
 </div>
 
 ---
@@ -389,7 +389,7 @@ ENCODING 'UTF8';
 <div class="cols">
 <div>
 
-### `read_csv` — ejecución inmediata
+### `read_csv` - ejecución inmediata
 
 ```python
 df = pl.read_csv(
@@ -407,7 +407,7 @@ df = pl.read_csv(
 </div>
 <div>
 
-### `scan_csv` — ejecución perezosa
+### `scan_csv` - ejecución perezosa
 
 ```python
 df = (
@@ -423,7 +423,7 @@ df = (
 )
 ```
 
-- `scan_csv` no lee nada todavía — construye un plan
+- `scan_csv` no lee nada todavía - construye un plan
 - `.filter()` y `.select()` agregan instrucciones al plan
 - `.collect()` ejecuta todo: lee solo las columnas y filas necesarias
 - El resultado es el mismo `DataFrame`, pero Polars nunca cargó las 124 columnas completas
@@ -437,7 +437,7 @@ Para exploración inicial usa <code>read_csv</code>. Para producción o archivos
 
 ---
 
-## Piedra Rosetta — Carga desde RDS
+## Piedra Rosetta - Carga desde RDS
 
 <div class="rosetta2">
   <div class="r-py">Python - Polars</div>
@@ -530,7 +530,7 @@ Con <strong>N bits</strong> se pueden representar <strong>2^N combinaciones</str
 </div>
 <div>
 
-### Decimales (punto flotante — IEEE 754)
+### Decimales (punto flotante - IEEE 754)
 
 | Tipo | Bits | Signo | Exponente | Mantisa | Precisión |
 |---|---|---|---|---|---|
@@ -546,7 +546,7 @@ a = (-1)^s \cdot 1.m_2 \cdot 2^{e_2 - 127}
 $$
 
 <div class="box warn">
-<code>fexp</code> en la ENDI es <code>Float64</code> — necesita los 15 dígitos de precisión para no distorsionar las estimaciones ponderadas.
+<code>fexp</code> en la ENDI es <code>Float64</code> - necesita los 15 dígitos de precisión para no distorsionar las estimaciones ponderadas.
 </div>
 
 </div>
@@ -554,7 +554,7 @@ $$
 
 ---
 
-## Los tipos en la ENDI — Polars
+## Los tipos en la ENDI - Polars
 
 ```python
 import polars as pl
@@ -587,7 +587,7 @@ Polars infiere los tipos automáticamente al leer el CSV. Pero siempre vale la p
 
 ---
 
-## Piedra Rosetta #2 — Exploración inicial
+## Piedra Rosetta #2 - Exploración inicial
 
 
 <div class="rosetta">
@@ -689,7 +689,7 @@ for col in cat_cols:
 
 ---
 
-## Datos perdidos — primer conteo
+## Datos perdidos - primer conteo
 
 
 
@@ -780,7 +780,7 @@ En la ENDI, los missings <strong>no son aleatorios</strong>. Un 'NA' en la secci
 3. Muestren el schema completo (nombre + tipo de cada columna)
 4. Ejecuten `.describe()` y identifiquen 3 variables numéricas de interés
 5. Hagan `.value_counts()` sobre las variables `area` y `region`
-6. Calculen el porcentaje de nulos por columna — ¿cuáles tienen más missings?
+6. Calculen el porcentaje de nulos por columna - ¿cuáles tienen más missings?
 
 **Pregunten:** ¿qué tipo de dato tiene `fexp`? ¿Tiene sentido ese tipo? ¿Y el código de provincia `prov`?
 

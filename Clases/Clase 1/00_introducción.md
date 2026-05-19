@@ -62,7 +62,7 @@ Transitar el ciclo completo del dato estructurado conocido como ETL (extract->tr
 
 **Dataset central: ENDI** *(Encuesta Nacional de Desnutrición Infantil, Ecuador 2023–24)*
 
-Usamos la ENDI es **actual**, tiene la **complejidad estructural** (6 tablas relacionales, factores de expansión, múltiples unidades de análisis) y permite ilustrar todos los conceptos del curso con datos reales y relevantes.
+Usamos la ENDI porque es **actual**, tiene la **complejidad estructural** (6 tablas relacionales, factores de expansión, múltiples unidades de análisis) y permite ilustrar todos los conceptos del curso con datos reales y relevantes.
 
 ---
 
@@ -72,17 +72,17 @@ Usamos la ENDI es **actual**, tiene la **complejidad estructural** (6 tablas rel
 
 | Ses. | Fecha | Tema | Tarea |
 |:---:|---|---|:---:|
-| 1 | 19 may | **Ingesta y arquitectura de tablas** | <span class="notarea">—</span> |
+| 1 | 19 may | **Ingesta y arquitectura de tablas** | <span class="notarea">-</span> |
 | 2 | 21 may | **Data wrangling y pivots** | <span class="tarea">✓</span> |
-| 3 | 26 may | **Funciones de ventana** | <span class="notarea">—</span> |
+| 3 | 26 may | **Funciones de ventana** | <span class="notarea">-</span> |
 | 4 | 28 may | **Integración y consultas complejas** | <span class="tarea">✓</span> |
-| 5 | 02 jun | **Inferencia y simulación** | <span class="notarea">—</span> |
+| 5 | 02 jun | **Inferencia y simulación** | <span class="notarea">-</span> |
 | 6 | 09 jun | **EDA y visualización** | <span class="tarea">✓</span> |
-| 7 | 04 jun | **Introducción a redes** | <span class="notarea">—</span> |
+| 7 | 04 jun | **Introducción a redes** | <span class="notarea">-</span> |
 | 8 | 09 jun | **Métricas de red y comunidades** | <span class="tarea">✓*</span> |
 
 <div class="box warn">
-Las tareas siempre son de <strong>jueves para el fin de semana</strong>. El producto final del tramo es un <strong>EDA completo</strong>.
+Las tareas siempre son de <strong>jueves para el fin de semana</strong>. El producto final del tramo es un <strong>Análisis Exploratorio de Datos (EDA) completo</strong>.
 </div>
 
 <small>\* se entrega el trabajo práctico de las sesiones 1-6</small>
