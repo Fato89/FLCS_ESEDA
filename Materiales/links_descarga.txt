@@ -1,0 +1,5 @@
+https://www.ecuadorencifras.gob.ec/encuesta_nacional_desnutricion_infantil/ - página principal (última ronda disponible)
+
+https://www.ecuadorencifras.gob.ec/documentos/web-inec/ENDI/R2/BDD_ENDI_R2_rds.zip - tablas de datos ENDI ronda 2
+
+https://www.ecuadorencifras.gob.ec/documentos/web-inec/ENDI/R2/2.Datos_abiertos_ENDI_R2.zip - CSV
