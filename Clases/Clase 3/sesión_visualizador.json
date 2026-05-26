@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "source_file": "datos.xlsx",
+  "created_at": "2026-05-25T23:08:25",
+  "steps": [
+    {
+      "cell_id": 0,
+      "df_name": "df_alumnos",
+      "code": ".with_columns(\n    pl.col(\"sexo\").cast(pl.Categorical)\n)"
+    },
+    {
+      "cell_id": 1,
+      "df_name": "df_asistencia",
+      "code": ".drop(\"total\")"
+    },
+    {
+      "cell_id": 2,
+      "df_name": "df_alumnos",
+      "code": ".with_columns(\n    (pl.col(\"altura\") / 100).round(2).alias(\"altura_m\")\n)"
+    },
+    {
+      "cell_id": 3,
+      "df_name": "df_notas",
+      "code": ".with_columns(\n    (pl.col(\"materia\")\n     .str.to_lowercase()\n     .str.strip_chars()\n     .str.replace_all(\"á\", \"a\")\n     .str.replace_all(\"é\", \"e\")\n     .str.replace_all(\"í\", \"i\")\n     .str.replace_all(\"ó\", \"o\")\n     .str.replace_all(\"ú\", \"u\")).alias(\"materia\")\n)"
+    },
+    {
+      "cell_id": 4,
+      "df_name": "df_alumnos",
+      "code": ".group_by(\"sexo\").agg(\n        [pl.col(\"edad\").mean().alias(\"edad_media\"),\n         pl.len().alias(\"n_alumnos\")])"
+    }
+  ]
+}
