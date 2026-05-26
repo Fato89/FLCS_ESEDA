@@ -4,6 +4,7 @@
 # ── Manipulación de datos ─────────────────────────────────
 polars>=0.20.0
 pandas>=2.0.0          # interoperabilidad con pyreadr y otras librerías
+fastexcel>=0.20.2
 
 # ── Lectura de formatos estadísticos ─────────────────────
 pyreadr>=0.5.0         # lectura de .rds (R)
