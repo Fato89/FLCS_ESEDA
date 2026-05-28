@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "source_file": "datos.xlsx",
+  "created_at": "2026-05-26T04:50:22",
+  "steps": [
+    {
+      "cell_id": 0,
+      "df_name": "df_alumnos",
+      "code": ".join(df_asistencia,on=\"cod_estudiante\", how =\"left\")"
+    },
+    {
+      "cell_id": 1,
+      "df_name": "df_alumnos",
+      "code": ".drop(pl.selectors.starts_with(\"a_\"))"
+    }
+  ]
+}
