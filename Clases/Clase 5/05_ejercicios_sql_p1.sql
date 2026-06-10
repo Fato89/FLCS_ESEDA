@@ -3,10 +3,10 @@
 -- FLACSO ESEDA 2026
 -- Para usar en DBeaver o pgAdmin
 -- Conexión:
---   Host:     db.jcgopqiutpioycndzkdg.supabase.co
---   Puerto:   5432
+--   Host:     aws-1-sa-east-1.pooler.supabase.com
+--   Puerto:   6543
 --   Base:     postgres
---   Usuario:  tu_usuario (ver usuarios_sql.csv)
+--   Usuario:  <tu_usuario>.jcgopqiutpioycndzkdg (ver usuarios_sql.csv)
 --   Password: flacso_eseda
 -- ============================================================
 
